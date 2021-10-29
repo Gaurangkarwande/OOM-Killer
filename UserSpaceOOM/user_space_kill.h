@@ -1,8 +1,3 @@
-/*---------------------------
-|   AUTHOR: Gaurang Karwande
-|
-*----------------------------*/
-
 #ifndef USER_SPACE_KILL_H
 #define USER_SPACE_KILL_H
 

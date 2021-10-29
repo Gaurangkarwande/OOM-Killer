@@ -1,8 +1,3 @@
-/*---------------------------
-|   AUTHOR: Gaurang Karwande
-|
-*----------------------------*/
-
 #include "get_process_statistics.h"
 #include "parse_oom_notifier.h"
 #include "user_space_kill.h"

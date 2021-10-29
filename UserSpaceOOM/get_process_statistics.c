@@ -1,8 +1,3 @@
-/*---------------------------
-|   AUTHOR: Gaurang Karwande
-|
-*----------------------------*/
-
 #include "get_process_statistics.h"
 
 bool taskState(int pid)

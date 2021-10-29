@@ -1,8 +1,3 @@
-/*---------------------------
-|   AUTHOR: Gaurang Karwande
-|
-*----------------------------*/
-
 #ifndef PARSE_OOM_NOTIFIER_H
 #define PARSE_OOM_NOTIFIER_H
 

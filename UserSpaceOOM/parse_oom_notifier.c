@@ -1,8 +1,3 @@
-/*---------------------------
-|   AUTHOR: Gaurang Karwande
-|
-*----------------------------*/
-
 #include "parse_oom_notifier.h"
 
 int parseOOMNotifierFS()

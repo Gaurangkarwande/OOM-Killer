@@ -1,8 +1,3 @@
-/*---------------------------
-|   AUTHOR: Gaurang Karwande
-|
-*----------------------------*/
-
 #include "user_space_kill.h"
 
 static int isnumeric(char* str)

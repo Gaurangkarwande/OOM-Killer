@@ -1,8 +1,3 @@
-/*---------------------------
-|   AUTHOR: Gaurang Karwande
-|
-*----------------------------*/
-
 #ifndef GET_PROCESS_STATISTICS_H
 #define GET_PROCESS_STATISTICS_H
 

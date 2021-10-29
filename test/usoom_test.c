@@ -14,7 +14,7 @@ void handle_sigterm(int sig)
 
 int main()
 {
-    long page_size = sysconf(_SC_PAGESIZE);
+    long page_size = sysconf(_SC_PAGESIZE); //Inquire about the virtual memory page size of the machine
     long bs = page_size * NUM_PAGES;
     long cnt = 0, last_sum = 0;
     struct timeval tv1;

@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define NUM_PAGES 10
+#define NUM_PAGES 5
 
 void handle_sigterm(int sig)
 {
@@ -26,7 +26,7 @@ int main()
 {
     FILE *fp;
     char pid_str[20];
-    int priority = 10;
+    int priority = 100;
 
     long page_size = sysconf(_SC_PAGESIZE); //Inquire about the virtual memory page size of the machine
     long bs = page_size * NUM_PAGES;

@@ -63,7 +63,7 @@ struct statproc_t getProcessStatistics(int pid)
     return ret_val;
 }
 
-int get_process_priority2(int pid)
+int get_process_priority(int pid)
 {
     char buf[256];
     FILE* f;
@@ -84,7 +84,6 @@ int get_process_priority2(int pid)
     {
         printf("Priority parsed and %d file deleted \n", pid);
         fclose(f);
-        remove(buf);
     }
     return priority;
 }

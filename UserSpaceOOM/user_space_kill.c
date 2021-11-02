@@ -64,17 +64,19 @@ void kill_victim_process(int signal)
 	struct statproc_t sp;
 	struct dirent* dir;
 	int kill_ret;
+	int victim_priority = 0;
 	int priority;
+	char buf[256];
 
-	DIR* procdir = opendir("/proc");
-	if(procdir == NULL)
+	DIR* user_proc_dir = opendir("/tmp/user_processes");
+	if(user_proc_dir == NULL)
 	{
-		printf("/proc directory not accessible! \n");
+		printf("/tmp/user_processes directory not accessible! \n");
 		exit(1);
 	}
 	while(1)
 	{
-		dir = readdir(procdir);
+		dir = readdir(user_proc_dir);
 		if(dir == NULL)
 		{
 			printf("/proc read error\n");
@@ -87,6 +89,8 @@ void kill_victim_process(int signal)
 			continue;
 		sp = getProcessStatistics(pid);
 		priority = get_process_priority(pid);
+		if (priority == 0)
+			continue;
 		if(sp.VmRSS == 0)
 			continue;
 		if(sp.exited == 1)
@@ -94,28 +98,23 @@ void kill_victim_process(int signal)
 		proc_oom_score = sp.oom_score;
 		if(sp.oom_score_adj > 0)
 			proc_oom_score -= sp.oom_score_adj;
-		if(proc_oom_score > victim_oom_score)
+		if(priority > victim_priority)
 		{
 			victim_pid = pid;
+			victim_priority = priority;
 			victim_oom_score = proc_oom_score;
 			victim_VmRSS = sp.VmRSS;
 		}
-		else if ((proc_oom_score == victim_oom_score))
-		{
-			if(sp.VmRSS > victim_VmRSS)
-			{
-				victim_pid = pid;
-				victim_VmRSS = sp.VmRSS;
-			}
-		}
 	}
-	closedir(procdir);
+	closedir(user_proc_dir);
 	if(victim_pid == 0)
 	{
 		printf("Cannot find a victim process\n");
 		return;
 	}
-	printf("Killing process %d with oom_score %d and VmRSS %ld\n",victim_pid,victim_oom_score,victim_VmRSS);
+	printf("Killing process %d with oom_score %d and VmRSS %ld and PRIORITY: %d\n",victim_pid,victim_oom_score,victim_VmRSS, victim_priority);
+	snprintf(buf, sizeof(buf), "/tmp/user_processes/%d", victim_pid);
+	remove(buf);
 	kill_ret = wait_kill(victim_pid,signal);
 	if(kill_ret != 0)
 	{

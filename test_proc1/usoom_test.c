@@ -4,6 +4,7 @@
 #include <sys/mman.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <string.h>
 
 #define NUM_PAGES 10
 
@@ -12,8 +13,21 @@ void handle_sigterm(int sig)
     printf("blocking SIGTERM %d\n", sig);
 }
 
+char* concat(const char *s1, const char *s2)
+{
+    char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+    // in real code you would check for errors in malloc here
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
 int main()
 {
+    FILE *fp;
+    char pid_str[20];
+    int priority = 10;
+
     long page_size = sysconf(_SC_PAGESIZE); //Inquire about the virtual memory page size of the machine
     long bs = page_size * NUM_PAGES;
     long cnt = 0, last_sum = 0;
@@ -24,6 +38,14 @@ int main()
     gettimeofday(&tv1, NULL);
     pid = getpid();
     printf("Test process PID: %d\n",pid);
+
+    sprintf(pid_str, "%d", pid);
+    char* priority_file_path = concat("/tmp/user_processes/", pid_str);
+    fp = fopen(priority_file_path, "w+");
+    fprintf(fp, "%d", priority);
+    fclose(fp);
+    free(priority_file_path);
+    
     while (1) {
         p = malloc(bs);
         if (!p) {

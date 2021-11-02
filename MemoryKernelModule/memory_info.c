@@ -4,10 +4,10 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("[Gaurang Karwande]");
 MODULE_DESCRIPTION("LKP Project 3");
 
-#define AVAILABLE_MEMORY_KILL_THRESHOLD 10
-#define SWAP_AVAILABLE_KILL_THRESHOLD 10
-#define AVAILABLE_MEMORY_WARN_THRESHOLD 20
-#define SWAP_AVAILABLE_WARN_THRESHOLD 20
+#define AVAILABLE_MEMORY_KILL_THRESHOLD 30
+#define SWAP_AVAILABLE_KILL_THRESHOLD 30
+#define AVAILABLE_MEMORY_WARN_THRESHOLD 50
+#define SWAP_AVAILABLE_WARN_THRESHOLD 50
 
 extern unsigned long kallsyms_lookup_name(const char *name);
 #define kallsyms_lookup_name (*(typeof(&kallsyms_lookup_name))my_kallsyms_lookup_name)

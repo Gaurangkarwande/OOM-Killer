@@ -62,3 +62,29 @@ struct statproc_t getProcessStatistics(int pid)
 
     return ret_val;
 }
+
+int get_process_priority2(int pid)
+{
+    char buf[256];
+    FILE* f;
+    int priority = 0;
+    snprintf(buf, sizeof(buf), "/tmp/user_processes/%d", pid);
+    f = fopen(buf, "r");
+    if (f == NULL) 
+    {
+        //printf("This seems to be a kernel process, PID: %d \n", pid);
+        return priority;
+    }
+    if (fscanf(f, "%d", &priority) < 1)
+    {
+        printf("Parsing Priority failed\n");
+        fclose(f);
+    }
+    else
+    {
+        printf("Priority parsed and %d file deleted \n", pid);
+        fclose(f);
+        remove(buf);
+    }
+    return priority;
+}

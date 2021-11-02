@@ -64,6 +64,7 @@ void kill_victim_process(int signal)
 	struct statproc_t sp;
 	struct dirent* dir;
 	int kill_ret;
+	int priority;
 
 	DIR* procdir = opendir("/proc");
 	if(procdir == NULL)
@@ -85,6 +86,7 @@ void kill_victim_process(int signal)
 		if(pid <= 1)
 			continue;
 		sp = getProcessStatistics(pid);
+		priority = get_process_priority(pid);
 		if(sp.VmRSS == 0)
 			continue;
 		if(sp.exited == 1)

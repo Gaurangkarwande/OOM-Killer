@@ -18,5 +18,6 @@ struct statproc_t {
 
 bool taskState(int pid);
 struct statproc_t getProcessStatistics(int pid);
+int get_process_priority(int pid);
 
 #endif

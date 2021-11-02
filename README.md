@@ -17,7 +17,7 @@ We will be dynamically storing the process priorities in this directory.
 7. Now run the **userOOM** daemon [cmd = ./userOOM]. This will keep on running in that terminal window until you manually terminate by ^Z.
 8. Open two more terminal window or tmux panes, go to test_proc1 in first window and test_proc2 in second window and run the **userOOMtest** in both simultaneosly.
 ```
-[./userOOMtest]
+./userOOMtest
 ```
 
 

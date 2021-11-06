@@ -17,7 +17,7 @@ static int isnumeric(char* str)
 	}
 }
 
-int wait_kill(int pid, int signal)
+int wait_kill(int pid, int signal, char* buf)
 {
 	const int wait_duration = 100;
 	int i;
@@ -36,6 +36,8 @@ int wait_kill(int pid, int signal)
 		{
 			if(parseOOMNotifierFS() == 2)
 			{
+				remove(buf);
+				printf("Process %d priority file deleted \n", pid);
 				signal = SIGKILL;
 				kill_res = kill(pid,signal);
 				if(kill_res != 0)
@@ -114,8 +116,7 @@ void kill_victim_process(int signal)
 	}
 	printf("Killing process %d with oom_score %d and VmRSS %ld and PRIORITY: %d\n",victim_pid,victim_oom_score,victim_VmRSS, victim_priority);
 	snprintf(buf, sizeof(buf), "/tmp/user_processes/%d", victim_pid);
-	remove(buf);
-	kill_ret = wait_kill(victim_pid,signal);
+	kill_ret = wait_kill(victim_pid, signal, buf);
 	if(kill_ret != 0)
 	{
 		printf("Failed to kill process %d\n",victim_pid);

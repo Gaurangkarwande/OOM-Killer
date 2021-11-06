@@ -82,7 +82,7 @@ int get_process_priority(int pid)
     }
     else
     {
-        printf("Priority parsed and %d file deleted \n", pid);
+        printf("Process %d priority parsed \n", pid);
         fclose(f);
     }
     return priority;

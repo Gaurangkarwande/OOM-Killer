@@ -2,6 +2,8 @@
 [with priority bassed killing]
 
 Compile and Run the project with following steps:
+
+0. git checkout priority-killing
 1. Build the kernel module in MemoryKernelModule directory using the **make** command. The output file **memory_info.ko** will be generated.
 2. Build the user-space OOM daemon with the **make** command in UserSpaceOOM directory. The output file **userOOM** will be generated in that directory.
 3. Build the test program in **test_proc1** directory with **make** command. The output file **userOOMtest** will be generated in that directory. The priority of this process is 100.

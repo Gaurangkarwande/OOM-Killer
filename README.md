@@ -2,6 +2,8 @@
 [with priority bassed killing]
 
 Compile and Run the project with following steps:
+
+0. git checkout priority-killing
 1. Build the kernel module in MemoryKernelModule directory using the **make** command. The output file **memory_info.ko** will be generated.
 2. Build the user-space OOM daemon with the **make** command in UserSpaceOOM directory. The output file **userOOM** will be generated in that directory.
 3. Build the test program in **test_proc1** directory with **make** command. The output file **userOOMtest** will be generated in that directory. The priority of this process is 100.
@@ -24,4 +26,3 @@ We will be dynamically storing the process priorities in this directory.
  The test programs will keep on allocating memory until system runs out of memory. The user-space daemon will kill the test processes to reclaim memory. The test program prints its *PID* which can used to see if *userOOM* kills the right task.
 
  **As test_proc1 has lower priority (100) than test_proc2 (10), test_proc1 is killed first.**
-

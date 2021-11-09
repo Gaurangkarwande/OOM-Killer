@@ -1,3 +1,4 @@
+/*Process for killing task in user space*/
 #ifndef USER_SPACE_KILL_H
 #define USER_SPACE_KILL_H
 
@@ -12,7 +13,7 @@
 #include "get_process_statistics.h"
 #include "parse_oom_notifier.h"
 
-void kill_victim_process(int signal);
+void victim_kill(int sig);
 
 #endif
 

@@ -1,6 +1,11 @@
+/*
+* The purpose of this module is to get the process statistics such as the oom score and priority.
+*/
+
 #include "get_process_statistics.h"
 
-bool taskState(int pid)
+/*Get the process information based on PID*/
+bool taskinfostate(int pid)
 {
     char buf[256];
     snprintf(buf, sizeof(buf), "/proc/%d/stat", pid);
@@ -20,11 +25,12 @@ bool taskState(int pid)
     return true;
 }
 
-struct statproc_t getProcessStatistics(int pid)
+/*Get the process OOM Score information and VmRSS Information*/
+struct processstats_t FetchProcessInfo(int pid)
 {
     char buf[256];
     FILE* f;
-    struct statproc_t ret_val = {0};
+    struct processstats_t ret_val = {0};
 
     snprintf(buf, sizeof(buf), "/proc/%d/oom_score", pid);
     f = fopen(buf, "r");
@@ -63,6 +69,8 @@ struct statproc_t getProcessStatistics(int pid)
     return ret_val;
 }
 
+
+/*Get the user defined priority of the process*/
 int get_process_priority(int pid)
 {
     char buf[256];

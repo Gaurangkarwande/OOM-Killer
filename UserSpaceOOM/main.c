@@ -4,17 +4,17 @@
 
 int main()
 {
-	int oomCondition;
+	int Status_oom;
 	while(1)
 	{
-		oomCondition = parseOOMNotifierFS();
-		if(oomCondition == 2)
+		Status_oom = OOMparseFs();
+		if(Status_oom == 2)
 		{
-			kill_victim_process(SIGKILL);
+			victim_kill(SIGKILL);
 		}
-		else if(oomCondition == 1)
+		else if(Status_oom == 1)
 		{
-			kill_victim_process(SIGTERM);
+			victim_kill(SIGTERM);
 		}
 		usleep(100000);
 	}

@@ -1,3 +1,7 @@
+/*
+* Parse the OOM status information in order to activate the OOM Daemon
+*/
+
 #ifndef PARSE_OOM_NOTIFIER_H
 #define PARSE_OOM_NOTIFIER_H
 
@@ -6,6 +10,6 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-int parseOOMNotifierFS();
+int OOMparseFs();
 
 #endif

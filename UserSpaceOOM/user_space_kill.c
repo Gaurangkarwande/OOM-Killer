@@ -1,69 +1,73 @@
+/*Process for killing task in user space*/
 #include "user_space_kill.h"
 
-static int isnumeric(char* str)
+/*Check the numerical value of the PIDs for a process*/
+static int num_chck(char* s)
 {
-	int i = 0;
-	if (str[0] == 0)
+	int num = 0;
+	if (s[0] == 0)
 	{
 		return 0;
 	}
 	while (1) 
 	{
-        	if (str[i] == 0)
+        	if (s[num] == 0)
             	return 1;
-        	if (isdigit(str[i]) == 0)
+        	if (isdigit(s[num]) == 0)
             	return 0;
-        	i++;
+			num++;
 	}
 }
 
-int wait_kill(int pid, int signal, char* buf)
+/*Wait and Kill the process with the PID*/
+int pollkill(int pid, int sig, char* buf)
 {
-	const int wait_duration = 100;
-	int i;
-	int kill_res = kill(pid,signal);
-	if(kill_res != 0)
+	int num;
+	const int poll_time = 100;
+	int res_kill = kill(pid, sig);
+	if(res_kill != 0)
 	{
-		return kill_res;
+		return res_kill;
 	}
-	if(signal == 0)
+	if(sig == 0)
 	{
 		return 0;
 	}
-	for(i = 0; i < wait_duration; i++)
+	for(num = 0; num < poll_time; num++)
 	{
-		if(signal != SIGKILL)
+		if(sig != SIGKILL)
 		{
-			if(parseOOMNotifierFS() == 2)
+			if(OOMparseFs() == 2)
 			{
 				remove(buf);
 				printf("Process %d priority file deleted \n", pid);
-				signal = SIGKILL;
-				kill_res = kill(pid,signal);
-				if(kill_res != 0)
+				sig = SIGKILL;
+				res_kill = kill(pid,sig);
+				if(res_kill != 0)
 				{
-					return kill_res;
+					return res_kill;
 				}
 			}
 		}
-		if(!taskState(pid))
+		if(!taskinfostate(pid))
 		{
-			printf("Process %d killed\n",pid);
+			printf("Process %d killed\n\n",pid);
 			return 0;
 		}
-		usleep(wait_duration * 1000);
+		usleep(poll_time * 1000);
 	}
 	return -1;
 }
 
-void kill_victim_process(int signal)
+/*Killing the process based on the priority value*/
+void victim_kill(int sig)
 {
 	int pid;
 	int victim_pid = 0;
 	int victim_oom_score = 0;
 	int proc_oom_score;
 	unsigned long victim_VmRSS = 0;
-	struct statproc_t sp;
+	struct processstats_t sp;
 	struct dirent* dir;
 	int kill_ret;
 	int victim_priority = 0;
@@ -84,12 +88,12 @@ void kill_victim_process(int signal)
 			printf("/proc read error\n");
 			break;
 		}
-		if(!isnumeric(dir->d_name))
+		if(!num_chck(dir->d_name))
 			continue;
 		pid = strtoul(dir->d_name, NULL,10);
 		if(pid <= 1)
 			continue;
-		sp = getProcessStatistics(pid);
+		sp = FetchProcessInfo(pid);
 		priority = get_process_priority(pid);
 		if (priority == 0)
 			continue;
@@ -114,9 +118,9 @@ void kill_victim_process(int signal)
 		printf("Cannot find a victim process\n");
 		return;
 	}
-	printf("Killing process %d with oom_score %d and VmRSS %ld and PRIORITY: %d\n",victim_pid,victim_oom_score,victim_VmRSS, victim_priority);
+	printf("Sending SIGTERM to process: %d \nOOM_score %d \nVmRSS %ld \nPriority: %d\n",victim_pid,victim_oom_score,victim_VmRSS, victim_priority);
 	snprintf(buf, sizeof(buf), "/tmp/user_processes/%d", victim_pid);
-	kill_ret = wait_kill(victim_pid, signal, buf);
+	kill_ret = pollkill(victim_pid, sig, buf);
 	if(kill_ret != 0)
 	{
 		printf("Failed to kill process %d\n",victim_pid);

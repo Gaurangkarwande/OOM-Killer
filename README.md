@@ -26,4 +26,3 @@ We will be dynamically storing the process priorities in this directory.
  The test programs will keep on allocating memory until system runs out of memory. The user-space daemon will kill the test processes to reclaim memory. The test program prints its *PID* which can used to see if *userOOM* kills the right task.
 
  **As test_proc1 has lower priority (100) than test_proc2 (10), test_proc1 is killed first.**
-

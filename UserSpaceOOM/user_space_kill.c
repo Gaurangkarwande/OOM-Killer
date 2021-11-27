@@ -63,11 +63,8 @@ int pollkill(int pid, int sig, char* buf)
 void get_processes(Process_List *my_process_list)
 {
 	int pid, proc_oom_score, priority;
-	unsigned long victim_VmRSS = 0;
 	struct processstats_t sp;
 	struct dirent* dir;
-	int kill_ret;
-	char buf[256];
 
 	DIR* user_proc_dir = opendir("/tmp/user_processes");
 	if(user_proc_dir == NULL)
@@ -75,7 +72,7 @@ void get_processes(Process_List *my_process_list)
 		printf("/tmp/user_processes directory not accessible! \n");
 		exit(1);
 	}
-	init_process_list(&my_process_list, 2);
+	init_process_list(my_process_list, 2);
 
 	while(1)
 	{
@@ -101,7 +98,7 @@ void get_processes(Process_List *my_process_list)
 		proc_oom_score = sp.oom_score;
 		if(sp.oom_score_adj > 0)
 			proc_oom_score -= sp.oom_score_adj;
-		insert_process(&my_process_list, pid, proc_oom_score, priority, sp.VmRSS);
+		insert_process(my_process_list, pid, proc_oom_score, priority, sp.VmRSS);
 	}
 	closedir(user_proc_dir);
 	return;
@@ -124,6 +121,10 @@ void victim_kill(int sig) {
             printf("Sending SIGTERM to Process: %d OOM_score %d Value: %d VmRSS: %ld \n",victim_pid,victim_oom_score, victim_value, victim_VmRSS);
             snprintf(buf, sizeof(buf), "/tmp/user_processes/%d", victim_pid);
             kill_ret = pollkill(victim_pid, sig, buf);
+			if(kill_ret != 0)
+			{
+				printf("Failed to kill process %d\n",victim_pid);
+			}
             tw += victim_oom_score;
             tv += victim_value;
         }

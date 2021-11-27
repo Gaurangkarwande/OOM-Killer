@@ -1,3 +1,5 @@
+//No longer in use. Only for reference.
+
 /*Process for killing task in user space*/
 #include "user_space_kill.h"
 
@@ -60,13 +62,18 @@ int pollkill(int pid, int sig, char* buf)
 }
 
 /*Killing the process based on the priority value*/
-void get_processes(Process_List *my_process_list)
+void victim_kill(int sig)
 {
-	int pid, proc_oom_score, priority;
+	int pid;
+	int victim_pid = 0;
+	int victim_oom_score = 0;
+	int proc_oom_score;
 	unsigned long victim_VmRSS = 0;
 	struct processstats_t sp;
 	struct dirent* dir;
 	int kill_ret;
+	int victim_priority = 0;
+	int priority;
 	char buf[256];
 
 	DIR* user_proc_dir = opendir("/tmp/user_processes");
@@ -75,8 +82,6 @@ void get_processes(Process_List *my_process_list)
 		printf("/tmp/user_processes directory not accessible! \n");
 		exit(1);
 	}
-	init_process_list(&my_process_list, 2);
-
 	while(1)
 	{
 		dir = readdir(user_proc_dir);
@@ -101,36 +106,26 @@ void get_processes(Process_List *my_process_list)
 		proc_oom_score = sp.oom_score;
 		if(sp.oom_score_adj > 0)
 			proc_oom_score -= sp.oom_score_adj;
-		insert_process(&my_process_list, pid, proc_oom_score, priority, sp.VmRSS);
+		if(priority > victim_priority)
+		{
+			victim_pid = pid;
+			victim_priority = priority;
+			victim_oom_score = proc_oom_score;
+			victim_VmRSS = sp.VmRSS;
+		}
 	}
 	closedir(user_proc_dir);
+	if(victim_pid == 0)
+	{
+		printf("Cannot find a victim process\n");
+		return;
+	}
+	printf("Sending SIGTERM to process: %d \nOOM_score %d \nVmRSS %ld \nPriority: %d\n",victim_pid,victim_oom_score,victim_VmRSS, victim_priority);
+	snprintf(buf, sizeof(buf), "/tmp/user_processes/%d", victim_pid);
+	kill_ret = pollkill(victim_pid, sig, buf);
+	if(kill_ret != 0)
+	{
+		printf("Failed to kill process %d\n",victim_pid);
+	}
 	return;
 }
-
-void victim_kill(int sig) {
-    int i, n, kill_ret, victim_pid, victim_oom_score, victim_value, tw = 0, tv = 0, *s;
-	unsigned long victim_VmRSS;
-	Process_List my_process_list;
-    char buf[256];
-    get_processes(&my_process_list);
-    n = (int) my_process_list.used;
-    s = knapsack(my_process_list.array, n, 400);
-    for (i = 0; i < n; i++) {
-        if (s[i] == 0) {
-            victim_pid = my_process_list.array[i].pid;
-            victim_oom_score = my_process_list.array[i].weight;
-            victim_value = my_process_list.array[i].value;
-            victim_VmRSS = my_process_list.array[i].VmRSS;
-            printf("Sending SIGTERM to Process: %d OOM_score %d Value: %d VmRSS: %ld \n",victim_pid,victim_oom_score, victim_value, victim_VmRSS);
-            snprintf(buf, sizeof(buf), "/tmp/user_processes/%d", victim_pid);
-            kill_ret = pollkill(victim_pid, sig, buf);
-            tw += victim_oom_score;
-            tv += victim_value;
-        }
-    }
-    printf("Freed %-22s %5d %5d\n", "totals:", tw, tv);
-    free_process_list(&my_process_list);
-}
-
-
-

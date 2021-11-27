@@ -12,6 +12,8 @@
 #include <ctype.h>
 #include "get_process_statistics.h"
 #include "parse_oom_notifier.h"
+#include "process_list.h"
+#include "knapsack.h"
 
 void victim_kill(int sig);
 

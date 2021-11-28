@@ -8,7 +8,7 @@ MAP_FILE = userOOM.map
 CC_OPTIONS = -Wall -O2 -g
 LD_FLAGS = -Xlinker -Map=$(MAP_FILE)
 
-OBJ_FILES = main.o get_process_statistics.o parse_oom_notifier.o user_space_kill.o
+OBJ_FILES = main.o get_process_statistics.o parse_oom_notifier.o user_space_kill.o process_list.o knapsack.o
 
 .SILENT: clean all %.o
 

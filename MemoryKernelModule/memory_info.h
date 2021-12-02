@@ -6,6 +6,7 @@
 #ifndef MEMORY_INFO_H
 #define MEMORY_INFO_H
 
+
 #include <linux/kernel.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
@@ -20,6 +21,7 @@
 #include <linux/sched.h>
 #include <linux/kprobes.h>
 #include <asm/uaccess.h>
+
 
 /*structure to access Memory Information*/
 struct meminfostat_t

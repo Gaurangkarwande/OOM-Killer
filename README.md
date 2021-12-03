@@ -17,6 +17,7 @@ Compile and Run the project with following steps:
  ```
 7. Insert the **memory_info** kernel module using command **sudo insmod memory_info.ko**. *dmesg* will show the status of the module. On sucessful insertion of the module, you will see the percentages of available memory and swap memory printed in the kernel log(dmesg).
 8. Create new folder **user_processes** in your **/tmp** directory. We will be dynamically storing the process priorities in this directory.
+
 ```
 cd /tmp
 mkdir user_processes

@@ -111,7 +111,7 @@ void victim_kill(int sig) {
     char buf[256];
     get_processes(&my_process_list);
     n = (int) my_process_list.used;
-    s = knapsack(my_process_list.array, n, 400);
+    s = knapsack(my_process_list.array, n, 1000);
     for (i = 0; i < n; i++) {
         if (s[i] == 0) {
             victim_pid = my_process_list.array[i].pid;

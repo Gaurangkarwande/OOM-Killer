@@ -121,7 +121,7 @@ static const struct file_operations oomnotifier_fops = {
 };
 */
 
-static void read_file(char* filename)
+/*static void read_file(char* filename)
 {
 	struct file* fp;
 	fp = filp_open(filename, O_RDONLY, 0);
@@ -129,7 +129,7 @@ static void read_file(char* filename)
 	printk(KERN_INFO "%u", fp->f_inode->i_flags);
 	printk(KERN_INFO "OOM Status: %u", fp->f_inode->i_flags);
 	filp_close(fp, NULL);
-}
+}*/
 
 
 /*Kallsyms Implementation*/
@@ -163,7 +163,7 @@ static int __init mem_stat_init(void)
 		printk(KERN_INFO "memory_info_module_thread started");
 	}
 	proc_create("oom_notifier", 0, NULL, &oomnotifier_proc);
-	read_file(PSI_MEMORY_FILE);
+	//read_file(PSI_MEMORY_FILE);
 	//printk(KERN_INFO "OOM_Kill_Status: %d\nOOM Status: %d", OOM_Kill_Status, OOM_Status);
 	printk(KERN_INFO "OOM Notifier inserted.\n");
 	return 0;

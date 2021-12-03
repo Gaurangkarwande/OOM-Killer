@@ -31,7 +31,7 @@ int main()
 {
     FILE *file_open;
     char val_pid[20];
-    int priority = 100;
+    int priority = 8;
 
     long num = 0, final_sum = 0;
     struct timeval val1;

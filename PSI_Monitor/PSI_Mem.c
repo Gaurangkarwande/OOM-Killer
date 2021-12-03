@@ -5,8 +5,6 @@
 #include "PSI_Mem.h"
 #include "../MemoryKernelModule/Psi_Mem_interface.h"
 
-/*Code for PSI*/
-#define DEBUG false
 /* Daemon parameters */
 #define POLL_INTERVAL       5
 #define RECOVERY_INTERVAL  15
@@ -49,16 +47,10 @@ static ssize_t fstr(const char* path, char* rbuf, const char* wbuf) {
 	return n;
 }
 
-/*static void sysrq_trigger_oom() {
-	printf("Above threshold limit, killing task and pausing for recovery\n");
-	//OOM_Kill_Status = 2;
-	//fstr(SYSRQ_TRIGGER_FILE, NULL, "f");
-	sleep(RECOVERY_INTERVAL);
-}*/
 
 int main(int argc, char** argv) {
 	setvbuf(stdout, NULL, _IOLBF, 0);
-	printf("poll_interval = %ds, recovery_interval = %ds, stall_threshold = %d%%\n",
+	printf("poll_interval = %ds,\nrecovery_interval = %ds,\nstall_threshold = %d%%\n\n",
 		POLL_INTERVAL, RECOVERY_INTERVAL, MEM_THRESHOLD_KILL);
 
 	while (true) {
@@ -74,18 +66,16 @@ int main(int argc, char** argv) {
 
 		sscanf(buf + i, "%f", &full_avg10);
 		printf("full_avg10=%f\n", full_avg10);
-
-		if (full_avg10 > MEM_THRESHOLD_WARN)
-		{
-			printf("WARN: THhreshold Limit Approaching");
-			PSI_OOM_Kill_Status = 1;
-		}
-
 		if (full_avg10 > MEM_THRESHOLD_KILL)
 		{
 			printf("Above Threshold Limit Summoning OOM DAEMON");
 			PSI_OOM_Kill_Status = 2;
 			sleep(RECOVERY_INTERVAL);
+		}
+		else if (full_avg10 > MEM_THRESHOLD_WARN)
+		{
+			//printf("WARN: THhreshold Limit Approaching\n");
+			PSI_OOM_Kill_Status = 1;
 		}
 		else
 			sleep(POLL_INTERVAL);

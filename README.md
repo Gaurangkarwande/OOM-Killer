@@ -31,8 +31,7 @@ bash testproc.sh
 ```
 
 The two heavy ML processes will be exacting on the memory along with the two dummy test programs that will keep allocating memory until system runs out of memory.
-The user-space daemon will kill the processes with lower cost (One ML process and two test programs will be killed in this case)to reclaim memory. The test program and ML tests prints its *PID* which can used to see if *userOOM* kills the right task. 
-The statistics of the running process such as OOM_Score, Value and VmRSS will be displayed. The command line will display if a process is killed.
-The test processes that were killed will be displayed along with the memory amount of memory freed and the sum of user defined values.
+The user-space daemon will kill the processes such that the utility as well as the memory pressure released is maximized. All test programs prints their *PID*s which can used to see if *userOOM* kills the right task. The statistics of the running process such as OOM_Score, Value and VmRSS will be displayed. The command line will display if a process is killed.
+The test processes that were killed will be displayed along with the reduction in overall system OOM Score and the associated expense of killing these processes measured by their utility values.
 
- **The ML process with a value closest to the set threshold in the knapsack algorithm will be retained. The other ML processes and dummy test program will be terminated**
+ **In the current run, the knapsack thresholds are set such that one ML process and the two dummy programs will be terminated**

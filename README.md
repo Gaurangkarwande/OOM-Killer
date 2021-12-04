@@ -1,5 +1,4 @@
 # User-Space-OOM
-[with priority bassed killing]
 
 Compile and Run the project with following steps:
 

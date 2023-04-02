@@ -24,7 +24,7 @@ mkdir user_processes
 
 9. Now run the **userOOM** daemon [cmd = ./userOOM]. This will keep on running in that terminal window until you manually terminate by ^Z.
 10. Now run the PSI Interface in another window **PSI_Monitor** [cmd = ./PSI_Mem]. The set threshold for fullavg10, poll interval and recovery interval will be displayed along with continuous monitoring of full avg10 values. The can be manually terminated by ^Z.
-11. In a new test window, now run the bash script testproc.sh to run two ML Test processes and the two dummy memory allocaton processes.
+11. In a new test window, now run the bash script testproc.sh to run two ML Test processes and dummy memory allocaton processes respectively.
 ```
 bash testproc.sh
 ```
